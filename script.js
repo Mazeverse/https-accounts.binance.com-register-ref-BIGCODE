@@ -1,14 +1,22 @@
-function copyCode(){
-  const text = document.getElementById('refCode').innerText.trim();
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => alert('Referral code copied: ' + text));
-    return;
-  }
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  document.body.appendChild(ta);
-  ta.select();
-  document.execCommand('copy');
-  document.body.removeChild(ta);
-  alert('Referral code copied: ' + text);
+
+function copyCode() {
+  const codeEl = document.getElementById("refCode");
+  const code = codeEl ? codeEl.innerText.trim() : "";
+  if (!code) return;
+
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector(".btn.small");
+    if (!btn) return;
+    const prev = btn.innerText;
+    btn.innerText = "Copied!";
+    setTimeout(() => (btn.innerText = prev), 1200);
+  }).catch(() => {
+    const textarea = document.createElement("textarea");
+    textarea.value = code;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(textarea);
+    alert("Copied: " + code);
+  });
 }
